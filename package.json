@@ -1,0 +1,23 @@
+{
+  "name": "diafi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^1.19.0",
+    "puppeteer-firefox": "^0.5.0",
+    "selenium-webdriver": "^4.0.0-alpha.4",
+    "sqlite3": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^1.19.1",
+    "@types/selenium-webdriver": "^4.0.2",
+    "debug": "^4.1.1"
+  }
+}

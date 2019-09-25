@@ -464,14 +464,6 @@ class WindowManager {
       this._mainPage = page;
       this._browser = browser;
       // await this._db.cleanDB();
-      const totalProcessos = await page.evaluate(() =>
-        document
-          .querySelector(
-            "div > div[id$=expedientesPendentesAdvogadoProcuradorDataTablePanel_body] > span"
-          )
-          .innerText.replace(/\D/g, "")
-      );
-      this._totalProcessos = parseInt(totalProcessos, 10);
       for (let index = 0; index < this._numWindows; index++) {
         const newPage = await browser.newPage();
         this._windows.push({
@@ -491,7 +483,17 @@ class WindowManager {
             this._doneCount
           } processos em ${minutos.toFixed(1)} minutos.`
         );
-      }, 1000 * 30);
+      }, 1000 * 90);
+      const totalProcessos = await page.evaluate(() =>
+        document
+          .querySelector(
+            "form div[id$=expedientesPendentesAdvogadoProcuradorDataTablePanel] > div[id$=expedientesPendentesAdvogadoProcuradorDataTablePanel_body] > span[style]"
+          )
+          .innerText.replace(/\D/g, "")
+      );
+      this._totalProcessos = parseInt(totalProcessos, 10);
+      wm("\n\n%d processos.\n\n", this._totalProcessos);
+
       return res();
     });
   }

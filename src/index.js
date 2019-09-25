@@ -74,9 +74,9 @@ const pergunta = pergunta =>
   }
   await winman.theEnd();
   bd("FIM");
-  // setTimeout(() => {
-  //   process.exit(0);
-  // }, 2500);
+  setTimeout(() => {
+    process.exit(0);
+  }, 2500);
   //===> //div/div/div/table[contains(id, "")]/tbody/tr/td[text()="»"]
 })();
 
@@ -220,23 +220,26 @@ async function* iterPageLinks(page) {
   const pageNumberCSSSelector = "tbody > tr > td.rich-datascr-act";
   const linkProxXpath =
     '//div/div/div/table[contains(id, "")]/tbody/tr/td[text()="»"]';
-  let isFirst = true;
   while (true) {
-    let pageNumber = 1;
     let linkProx = undefined;
-    let hasNext = false;
     try {
       linkProx = await page.waitForXPath(linkProxXpath, { timeout: 5 });
-      hasNext = await page.evaluate(b => {
-        return typeof b.onclick === "function";
-      }, linkProx);
-      pageNumber = await page.evaluate(
-        sel => document.querySelector(sel).innerText,
-        pageNumberCSSSelector
-      );
     } catch (error) {
-      bd("\n\napenas uma página...");
+      bd("\n\napenas uma página?... %O", error);
     }
+    const hasNext =
+      typeof linkProx === "undefined"
+        ? false
+        : await page.evaluate(b => {
+            return typeof b.onclick === "function";
+          }, linkProx);
+    const pageNumber =
+      typeof linkProx === "undefined"
+        ? "1"
+        : await page.evaluate(
+            sel => document.querySelector(sel).innerText,
+            pageNumberCSSSelector
+          );
     await page.evaluate(() => {
       if (!!document.querySelector("#text-span-info-painel")) {
         return;
@@ -245,13 +248,13 @@ async function* iterPageLinks(page) {
       fixedDiv.id = "info-fixed-div";
       const span1 = document.createElement("span");
       span1.id = "info-span-1";
-      span1.innerText = "x";
+      span1.innerText = "-";
       const span2 = document.createElement("span");
       span2.id = "info-span-2";
-      span2.innerText = "x";
+      span2.innerText = "-";
       const span3 = document.createElement("span");
       span3.id = "info-span-3";
-      span3.innerText = "x";
+      span3.innerText = "-";
       fixedDiv.appendChild(span1);
       fixedDiv.appendChild(span2);
       fixedDiv.appendChild(span3);
@@ -321,9 +324,9 @@ async function* iterPageLinks(page) {
       bd("prox pagina carregou...");
       await page.waitFor(500);
     } else {
+      bd("\n\nlastPage\n\n");
       break;
     }
-    isFirst = false;
   }
 }
 
